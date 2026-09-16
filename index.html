@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Daymark — Habit tracker</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <a class="brand" href="#"><span class="brand-mark">d</span><span>daymark</span></a>
+      <nav>
+        <button class="nav-link active" data-view="today"><span>☀</span> Today</button>
+        <button class="nav-link" data-view="habits"><span>⌘</span> All habits</button>
+        <button class="nav-link" data-view="insights"><span>◔</span> Insights</button>
+      </nav>
+      <div class="sidebar-bottom">
+        <div class="challenge-card"><span class="small-caps">75 day challenge</span><strong><span id="challengeDay">18</span> / 75 days</strong><div class="progress"><i id="challengeProgress"></i></div><small>Keep showing up. ✦</small></div>
+        <button class="avatar" id="profileButton" aria-label="Switch profile"><span id="profileInitial">A</span><em id="profileName">Ananya</em><b>⌄</b></button>
+      </div>
+    </aside>
+
+    <main>
+      <header class="topbar">
+        <button class="mobile-menu" aria-label="Open menu">☰</button>
+        <div class="date-nav"><button id="prevDay" aria-label="Previous day">‹</button><button id="todayButton">Today</button><button id="nextDay" aria-label="Next day">›</button></div>
+        <div class="top-actions"><label class="search"><span>⌕</span><input id="searchInput" placeholder="Find a habit" /><kbd>⌘ K</kbd></label><button class="icon-button" aria-label="Notifications">♧</button></div>
+      </header>
+
+      <section class="content" id="todayView">
+        <div class="heading-row">
+          <div><p class="eyebrow" id="greeting">GOOD MORNING, ANANYA</p><h1 id="dateHeading">Tuesday, 16 September</h1><p class="subhead" id="dailyMessage">A small promise to yourself, kept.</p></div>
+          <button class="primary-button" id="addHabit">+ <span>New habit</span></button>
+        </div>
+        <div class="daily-status"><div class="status-ring" id="statusRing"><strong id="completedCount">0</strong><small>of <span id="dueCount">0</span></small></div><div><strong id="statusTitle">A fresh page.</strong><p id="statusText">Start with one small win.</p></div><div class="status-quote">“The secret of getting ahead is getting started.”<span>— Mark Twain</span></div></div>
+        <aside id="morningReminder" class="morning-reminder hidden" aria-live="polite"></aside>
+        <div class="section-header"><h2>Today’s habits</h2><span id="habitCount"></span></div>
+        <div id="habitList" class="habit-list"></div>
+        <div class="empty-state hidden" id="emptyState"><div>✦</div><h3>Nothing scheduled for this day</h3><p>Enjoy the space, or add a new habit.</p></div>
+      </section>
+
+      <section class="content hidden" id="habitsView">
+        <div class="heading-row"><div><p class="eyebrow">YOUR ROUTINES</p><h1>All habits</h1><p class="subhead">Every small practice has a place here.</p></div><button class="primary-button" id="addHabit2">+ <span>New habit</span></button></div>
+        <div class="habit-toolbar"><label class="search wide"><span>⌕</span><input id="allSearchInput" placeholder="Search your habits" /></label><div class="filter-tabs"><button class="filter active" data-filter="active">Active</button><button class="filter" data-filter="archived">Archived</button></div></div>
+        <p class="manage-note">Use <b>▣</b> to archive or restore a habit. Use <b>⌫</b> to permanently delete it and its history.</p>
+        <div id="allHabitList" class="all-habit-list"></div>
+      </section>
+
+      <section class="content hidden" id="insightsView">
+        <p class="eyebrow">YOUR MOMENTUM</p><h1>Small wins, adding up.</h1><div class="insight-grid"><article><span>COMPLETION THIS WEEK</span><strong id="weekRate">0%</strong><p>of scheduled habits complete</p></article><article><span>LONGEST CURRENT STREAK</span><strong id="longestStreak">0 days</strong><p id="longestName">Start a streak today</p></article><article><span>HABITS COMPLETED</span><strong id="totalCompletions">0</strong><p>all time</p></article></div><div class="weekly-card"><div><h2>This week</h2><p>Show up in the ordinary moments.</p></div><div id="weekBars" class="week-bars"></div></div><div class="habit-progress-heading"><div><p class="eyebrow">THE DETAILS</p><h2>Habit-by-habit progress</h2><p>Review the last 14 days for every active habit.</p></div><span class="progress-key"><i class="done-dot"></i> Done <i class="missed-dot"></i> Missed <i class="off-dot"></i> Not scheduled</span></div><div id="habitProgressList" class="habit-progress-list"></div></section>
+    </main>
+  </div>
+
+  <dialog id="habitDialog"><form method="dialog" id="habitForm"><div class="dialog-title"><div><p class="eyebrow">MAKE IT REAL</p><h2 id="dialogHeading">Create a new habit</h2></div><button value="cancel" class="close">×</button></div><label>Habit name<input id="habitName" required maxlength="50" placeholder="e.g. Read 20 pages" /></label><div class="form-row"><label>Icon<select id="habitIcon"><option value="☼">☼</option><option value="⌁">⌁</option><option value="◒">◒</option><option value="✦">✦</option><option value="♡">♡</option><option value="⌂">⌂</option></select></label><label>Colour<select id="habitColor"><option value="coral">Coral</option><option value="gold">Gold</option><option value="blue">Blue</option><option value="lilac">Lilac</option><option value="green">Green</option></select></label></div><label class="reminder-time">Reminder time <input id="habitReminderTime" type="time" /><small>Optional — get an alert when this habit is due.</small></label><fieldset><legend>When do you want to do this?</legend><div class="days" id="scheduleDays"><button type="button" data-day="1">M</button><button type="button" data-day="2">T</button><button type="button" data-day="3">W</button><button type="button" data-day="4">T</button><button type="button" data-day="5">F</button><button type="button" data-day="6">S</button><button type="button" data-day="0">S</button></div><small>Choose the days this habit is due.</small></fieldset><div class="dialog-actions"><button value="cancel" class="secondary-button">Cancel</button><button class="primary-button" value="default" id="saveHabit">Save habit</button></div></form></dialog>
+  <dialog id="profileDialog"><div class="profile-dialog"><div class="dialog-title"><div><p class="eyebrow">YOUR SPACE</p><h2>Switch profile</h2></div><button class="close" id="closeProfiles" aria-label="Close">×</button></div><div id="profileList" class="profile-list"></div><form id="profileForm" class="new-profile-form"><label>Add another person<input id="newProfileName" required maxlength="30" placeholder="Name" /></label><button class="primary-button" type="submit">+ Add profile</button></form><p class="profile-note">Each profile has private habits, streaks, and challenge progress on this browser.</p></div></dialog>
+  <script src="app.js"></script>
+</body>
+</html>
